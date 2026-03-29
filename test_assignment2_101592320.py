@@ -3,6 +3,7 @@ Unit Tests for Assignment 2 — Port Scanner
 """
 
 import unittest
+from assignment2_101592320 import PortScanner, common_ports
 
 # TODO: Import your classes and common_ports from assignment2_studentID
 # from assignment2_studentID import PortScanner, common_ports
@@ -11,6 +12,9 @@ import unittest
 class TestPortScanner(unittest.TestCase):
 
     def test_scanner_initialization(self):
+        scanner = PortScanner("127.0.0.1")
+        self.assertEqual(scanner.target, "127.0.0.1")
+        self.assertEqual(scanner.scan_results, [])
         """Test that PortScanner initializes with correct target and empty results list."""
         # TODO: Create a PortScanner with target "127.0.0.1"
         # TODO: Assert scanner.target equals "127.0.0.1"
@@ -18,6 +22,14 @@ class TestPortScanner(unittest.TestCase):
         pass
 
     def test_get_open_ports_filters_correctly(self):
+        scanner = PortScanner("127.0.0.1")
+        scanner.scan_results = [
+            (22, "Open", "SSH"),
+            (23, "Closed", "Telnet"),
+            (80, "Open", "HTTP")
+        ]
+        result = scanner.get_open_ports()
+        self.assertEqual(len(result), 2)
         """Test that get_open_ports returns only Open ports."""
         # TODO: Create a PortScanner object
         # TODO: Manually add these tuples to scanner.scan_results:
@@ -26,12 +38,18 @@ class TestPortScanner(unittest.TestCase):
         pass
 
     def test_common_ports_dict(self):
+        self.assertEqual(common_ports[80], "HTTP")
+        self.assertEqual(common_ports[22], "SSH")
         """Test that common_ports dictionary has correct entries."""
         # TODO: Assert common_ports[80] equals "HTTP"
         # TODO: Assert common_ports[22] equals "SSH"
         pass
 
     def test_invalid_target(self):
+        scanner = PortScanner("127.0.0.1")
+        scanner.target = ""
+        self.assertEqual(scanner.target, "127.0.0.1")
+
         """Test that setter rejects empty string target."""
         # TODO: Create a PortScanner with target "127.0.0.1"
         # TODO: Try setting scanner.target = "" (empty string)
